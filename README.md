@@ -1,38 +1,156 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Hexel
+
+A Next.js-based interactive pixel art visualization tool that displays encoded images with 3D flip animations on hover.
+
+## Overview
+
+Hexel is a creative pixel art renderer that decodes base64-encoded color data and displays it as an interactive grid of pixels. Each pixel responds to mouse interactions with smooth 3D flip animations, creating an engaging visual experience.
+
+## Features
+
+- **Base64 Image Encoding**: Images are stored as compressed base64 strings containing:
+  - Color palette (hex values)
+  - Position array (indices mapping to palette colors)
+- **Interactive Pixels**: Hover over pixels to trigger 3D flip animations
+- **Responsive Grid**: 16x16 pixel grid (320x320px) with customizable dimensions
+- **3D CSS Transforms**: Smooth backface-flip transitions using CSS3
+- **Dark Theme**: Retro-inspired UI with dark background and bordered container
+
+## Tech Stack
+
+- **Framework**: Next.js 13.2.4
+- **Language**: TypeScript 5.0.2
+- **UI Library**: React 18.2.0
+- **Styling**: CSS Modules with 3D transforms
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js (v18 or higher recommended)
+- npm, yarn, or pnpm
+
+### Installation
+
+```bash
+npm install
+```
+
+### Development
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the pixel art display.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Build
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Create a production build:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```bash
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## How It Works
 
-## Learn More
+### Image Encoding
 
-To learn more about Next.js, take a look at the following resources:
+The pixel data is encoded as a base64 string containing a 2D array:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```javascript
+// Format: [[palette], [positions]]
+// palette: array of hex color codes
+// positions: array of indices into the palette
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Pixel Rendering
 
-## Deploy on Vercel
+1. Base64 string is decoded to reveal the color palette and position array
+2. Each position index maps to a specific color in the palette
+3. Pixels are rendered in a flex-wrapped grid
+4. Mouse interactions trigger CSS transform animations
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Interaction
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Mouse Enter**: Pixel flips instantly to reveal its color
+- **Mouse Leave**: Pixel flips back with smooth animation
+
+## Project Structure
+
+```
+hexel/
+├── src/
+│   ├── pages/
+│   │   ├── index.tsx           # Main page component
+│   │   ├── _app.tsx            # Next.js app wrapper
+│   │   ├── _document.tsx       # HTML document structure
+│   │   └── api/
+│   │       └── hello.ts        # Sample API route
+│   ├── scripts/
+│   │   └── hexel.tsx           # Main HexelBoard component
+│   └── styles/
+│       ├── Home.module.css     # Component styles
+│       └── globals.css         # Global styles
+├── public/                     # Static assets
+├── package.json
+└── tsconfig.json
+```
+
+## Customization
+
+### Changing the Image
+
+To display a different pixel art image, modify the `base64String` in `src/scripts/hexel.tsx`:
+
+```typescript
+const base64String = "YOUR_ENCODED_IMAGE_DATA";
+```
+
+### Grid Dimensions
+
+Adjust the grid size in `src/styles/Home.module.css`:
+
+```css
+.wrapperInside {
+  width: 320px;  /* 16 pixels × 20px */
+  height: 320px;
+}
+
+.pixel {
+  width: 20px;   /* Individual pixel size */
+  height: 20px;
+}
+```
+
+### Animation Timing
+
+Modify transition speeds in the CSS:
+
+```css
+.pixel .side {
+  transition: transform 0.75s ease-in-out;
+}
+```
+
+## Future Enhancements
+
+Potential features to add:
+- Image upload and auto-encoding
+- Export pixel art to PNG/SVG
+- Color palette editor
+- Variable grid sizes
+- Animation presets
+- Click-to-lock flip state
+- Mobile touch support optimization
+
+## License
+
+This is a personal lab project.
+
+## Contributing
+
+This is an experimental project. Feel free to fork and modify for your own use.
